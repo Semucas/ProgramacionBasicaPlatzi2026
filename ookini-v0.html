@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ookini | Café de Barrio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Playfair Display -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Configuración personalizada de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            light: '#FBF9F6', // Crema suave de fondo
+                            oat: '#F5EFEB',   // Avena cálido
+                            clay: '#C47A5A',  // Arcilla de acento
+                            dark: '#241F1C',  // Espresso oscuro
+                            sage: '#8F9779'   // Verde salvia sutil
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Estilos personalizados para animaciones y scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FBF9F6;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #C47A5A;
+            border-radius: 4px;
+        }
+
+        .active-tab {
+            border-bottom-color: #C47A5A;
+            color: #C47A5A;
+        }
+    </style>
+</head>
+
+<body class="bg-brand-light text-brand-dark font-sans overflow-x-hidden">
+
+    <nav
+        class="sticky top-0 z-40 bg-brand-light/95 backdrop-blur-md border-b border-brand-oat transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo -->
+                <div class="flex items-center gap-2">
+                    <span class="font-serif text-2xl lg:text-3xl font-bold tracking-wider text-brand-dark">
+                        OOKINI<span
+                            class="text-brand-clay font-sans text-sm block tracking-widest text-right mt-[-5px]">おおきに</span>
+                    </span>
+                </div>
+
+                <!-- Menú de navegación (Desktop) -->
+                <div class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
+                    <a href="#historia" class="hover:text-brand-clay transition-colors">Nuestra Historia</a>
+                    <a href="#menu" class="hover:text-brand-clay transition-colors">Carta</a>
+                    <a href="#tienda" class="hover:text-brand-clay transition-colors">Granos</a>
+                    <a href="#masterclass" class="hover:text-brand-clay transition-colors">Guía de Extracción</a>
+                    <a href="#reservas" class="hover:text-brand-clay transition-colors">Reservas / Contacto</a>
+                </div>
+
+                <!-- Carrito y Menú Móvil -->
+                <div class="flex items-center space-x-4">
+                    <!-- Botón del Carrito -->
+                    <button onclick="toggleCart()"
+                        class="relative p-2.5 rounded-full bg-brand-oat hover:bg-brand-clay hover:text-white transition-all duration-300 focus:outline-none"
+                        aria-label="Abrir Carrito">
+                        <i class="fa-solid fa-bag-shopping text-lg"></i>
+                        <span id="cart-count"
+                            class="absolute -top-1 -right-1 bg-brand-clay text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold border border-brand-light shadow-sm">0</span>
+                    </button>
+
+                    <!-- Botón Menú Móvil -->
+                    <button onclick="toggleMobileMenu()"
+                        class="md:hidden p-2.5 rounded-full bg-brand-oat text-brand-dark hover:bg-brand-clay hover:text-white transition-colors focus:outline-none"
+                        aria-label="Menú">
+                        <i id="menu-icon" class="fa-solid fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu"
+            class="hidden md:hidden bg-brand-light border-b border-brand-oat px-4 py-4 space-y-3 transition-all duration-300">
+            <a href="#historia" onclick="toggleMobileMenu()"
+                class="block py-2 px-3 rounded-lg hover:bg-brand-oat hover:text-brand-clay font-medium transition-colors">Nuestra
+                Historia</a>
+            <a href="#menu" onclick="toggleMobileMenu()"
+                class="block py-2 px-3 rounded-lg hover:bg-brand-oat hover:text-brand-clay font-medium transition-colors">Carta</a>
+            <a href="#tienda" onclick="toggleMobileMenu()"
+                class="block py-2 px-3 rounded-lg hover:bg-brand-oat hover:text-brand-clay font-medium transition-colors">Granos</a>
+            <a href="#masterclass" onclick="toggleMobileMenu()"
+                class="block py-2 px-3 rounded-lg hover:bg-brand-oat hover:text-brand-clay font-medium transition-colors">Guía
+                de Extracción</a>
+            <a href="#reservas" onclick="toggleMobileMenu()"
+                class="block py-2 px-3 rounded-lg bg-brand-clay text-white font-medium text-center transition-colors">Reservas
+                / Contacto</a>
+        </div>
+    </nav>
+
+    <header class="relative min-h-[90vh] flex items-center bg-brand-light overflow-hidden py-12 lg:py-24">
+        <!-- Decoraciones de fondo minimalistas -->
+        <div class="absolute top-20 right-[-10%] w-96 h-96 rounded-full bg-brand-oat/40 blur-3xl pointer-events-none">
+        </div>
+        <div class="absolute bottom-10 left-[-5%] w-72 h-72 rounded-full bg-brand-sage/10 blur-2xl pointer-events-none">
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Textos -->
+                <div class="lg:col-span-6 space-y-6 text-center lg:text-left">
+                    <span
+                        class="inline-flex items-center gap-2 bg-brand-oat text-brand-clay text-xs font-semibold uppercase tracking-widest px-4 py-1.5 rounded-full">
+                        <i class="fa-solid fa-certificate"></i> Cafetería de Especialidad Japandi
+                    </span>
+                    <h1
+                        class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-brand-dark leading-tight">
+                        Gratitud en cada taza. <br class="hidden sm:inline">
+                        Sabor con <span class="text-brand-clay italic">alma.</span>
+                    </h1>
+                    <p
+                        class="text-base sm:text-lg text-brand-dark/80 max-w-xl mx-auto lg:mx-0 font-light leading-relaxed">
+                        En <strong class="font-medium">Ookini</strong>, fusionamos el arte meticuloso del café de
+                        especialidad con la calidez de la hospitalidad nipona. Un santuario de paz en medio de la ciudad
+                        para reconectarte con tus sentidos.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
+                        <a href="#menu"
+                            class="px-8 py-4 bg-brand-dark text-white rounded-full font-medium tracking-wide hover:bg-brand-clay shadow-lg hover:shadow-brand-clay/30 transition-all duration-300 text-center">
+                            Explorar Menú de Hoy
+                        </a>
+                        <a href="#tienda"
+                            class="px-8 py-4 border-2 border-brand-dark text-brand-dark rounded-full font-medium tracking-wide hover:bg-brand-dark hover:text-white transition-all duration-300 text-center">
+                            Comprar Café en Grano
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Imagen principal / Diseño -->
+                <div class="lg:col-span-6 relative flex justify-center">
+                    <div class="relative w-full max-w-md sm:max-w-lg">
+                        <!-- Marco estético japonés con bordes curvados e imagen conceptual -->
+                        <div
+                            class="aspect-[4/5] bg-brand-oat rounded-3xl overflow-hidden shadow-2xl relative border-4 border-white">
+                            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=800"
+                                alt="Taza de café vertiendo sobre madera natural"
+                                class="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                                onerror="this.src='https://placehold.co/800x1000/241F1C/F5EFEB?text=Ookini+Specialty+Coffee'">
+
+                            <!-- Tarjeta Flotante: Nota de origen -->
+                            <div
+                                class="absolute bottom-6 left-6 right-6 bg-brand-light/95 backdrop-blur-md p-4 rounded-2xl shadow-lg border border-brand-oat/50">
+                                <p class="text-xs text-brand-clay font-bold tracking-widest uppercase">Origen de la
+                                    semana</p>
+                                <div class="flex justify-between items-end mt-1">
+                                    <div>
+                                        <h3 class="font-serif font-bold text-lg">Etiopía - Yirgacheffe</h3>
+                                        <p class="text-xs text-brand-dark/70">Notas florales, bergamota y jazmín</p>
+                                    </div>
+                                    <span class="bg-brand-sage text-white text-xs px-2 py-1 rounded font-medium">92.5
+                                        pts</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="historia" class="py-20 sm:py-32 bg-brand-oat/40 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 order-2 lg:order-1">
+                    <div class="grid grid-cols-2 gap-4">
+                        <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&q=80&w=400"
+                            alt="Barista vertiendo agua caliente"
+                            class="rounded-2xl shadow-md w-full aspect-square object-cover hover:scale-102 transition-transform duration-300"
+                            onerror="this.src='https://placehold.co/400x400/241F1C/F5EFEB?text=Meticulous+Pour'">
+                        <img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&q=80&w=400"
+                            alt="Interior acogedor de cafetería"
+                            class="rounded-2xl shadow-md w-full aspect-square object-cover mt-8 hover:scale-102 transition-transform duration-300"
+                            onerror="this.src='https://placehold.co/400x400/241F1C/F5EFEB?text=Japandi+Space'">
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 space-y-6 order-1 lg:order-2">
+                    <span class="text-brand-clay text-sm font-bold tracking-widest uppercase block">La Filosofía
+                        OOKINI</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-brand-dark">
+                        El puente perfecto entre Kioto y tu taza de café diaria.
+                    </h2>
+                    <p class="text-brand-dark/80 font-light leading-relaxed">
+                        En dialecto de Kansai, <strong>"Ookini"</strong> no es un simple "gracias". Expresa un profundo
+                        agradecimiento hacia la vida, hacia el momento compartido y el esfuerzo detrás de cada cosa.
+                    </p>
+                    <p class="text-brand-dark/80 font-light leading-relaxed">
+                        Esa es exactamente la devoción que aplicamos en nuestra cafetería. Seleccionamos rigurosamente
+                        granos de origen único puntuados por encima de 85 por la SCA, tostados delicadamente para
+                        potenciar su perfil natural, y servidos bajo la filosofía japonesa de la hospitalidad pura.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-brand-oat">
+                        <div class="space-y-1">
+                            <span class="text-brand-clay font-serif text-3xl font-bold block">100%</span>
+                            <p class="text-sm font-semibold">Trazable</p>
+                            <p class="text-xs text-brand-dark/60">Conocemos la finca, el productor y el lote exacto.</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-brand-clay font-serif text-3xl font-bold block">85+</span>
+                            <p class="text-sm font-semibold">Puntaje SCA</p>
+                            <p class="text-xs text-brand-dark/60">Solo granos excepcionales de microclimas.</p>
+                        </div>
+                        <div class="space-y-1">
+                            <span class="text-brand-clay font-serif text-3xl font-bold block">1.0</span>
+                            <p class="text-sm font-semibold">Hospitalidad Omotenashi</p>
+                            <p class="text-xs text-brand-dark/60">Servicio consciente y cuidado al detalle.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="menu" class="py-20 sm:py-32 bg-brand-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto space-y-4 mb-16">
+                <span class="text-brand-clay text-sm font-bold tracking-widest uppercase block">Nuestra Carta</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-brand-dark">El Menú de la Barra</h2>
+                <p class="text-brand-dark/70 font-light">Disfruta de nuestra barra fría o caliente, elaborada con leche
+                    de avena orgánica, leche entera de pastoreo, o simplemente pura para apreciar el origen.</p>
+
+                <!-- Selector de categorías de menú -->
+                <div class="flex flex-wrap justify-center gap-2 pt-6">
+                    <button onclick="filterMenu('espresso')" id="btn-espresso"
+                        class="menu-tab px-5 py-2.5 rounded-full text-sm font-medium border border-brand-oat transition-all duration-300 bg-brand-dark text-white shadow-sm">
+                        Espresso Bar
+                    </button>
+                    <button onclick="filterMenu('filtrados')" id="btn-filtrados"
+                        class="menu-tab px-5 py-2.5 rounded-full text-sm font-medium border border-brand-oat transition-all duration-300 bg-white text-brand-dark hover:bg-brand-oat">
+                        Métodos de Extracción
+                    </button>
+                    <button onclick="filterMenu('especiales')" id="btn-especiales"
+                        class="menu-tab px-5 py-2.5 rounded-full text-sm font-medium border border-brand-oat transition-all duration-300 bg-white text-brand-dark hover:bg-brand-oat">
+                        Especiales de Temporada
+                    </button>
+                    <button onclick="filterMenu('reposteria')" id="btn-reposteria"
+                        class="menu-tab px-5 py-2.5 rounded-full text-sm font-medium border border-brand-oat transition-all duration-300 bg-white text-brand-dark hover:bg-brand-oat">
+                        Bocados & Repostería
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grilla de Items del Menú -->
+            <div id="menu-items-container"
+                class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto transition-all duration-300">
+                <!-- Se inyecta dinámicamente con JS, pero dejamos un fallback estático para SEO e instantaneidad -->
+            </div>
+        </div>
+    </section>
+
+    <section id="tienda" class="py-20 sm:py-32 bg-brand-oat/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16">
+                <div class="max-w-xl space-y-4">
+                    <span class="text-brand-clay text-sm font-bold tracking-widest uppercase block">La Cafetería en
+                        Casa</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-brand-dark">Bolsas de Café de Especialidad
+                    </h2>
+                    <p class="text-brand-dark/70 font-light">Granos frescos seleccionados con trazabilidad total. Elige
+                        tu molienda óptima o llévate los granos enteros para disfrutar del aroma perfecto en tu hogar.
+                    </p>
+                </div>
+                <!-- Banner decorativo / Info de envío -->
+                <div
+                    class="flex items-center gap-3 bg-brand-light p-4 rounded-2xl border border-brand-oat/50 shadow-sm">
+                    <i class="fa-solid fa-truck-fast text-brand-clay text-2xl"></i>
+                    <div>
+                        <h4 class="font-bold text-sm">Envíos a todo el país</h4>
+                        <p class="text-xs text-brand-dark/60">Gratis en compras superiores a $35.000</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Productos de Café (Tienda) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Tarjeta de Producto 1 -->
+                <div
+                    class="bg-brand-light rounded-3xl overflow-hidden shadow-lg border border-brand-oat flex flex-col justify-between group">
+                    <div
+                        class="relative overflow-hidden bg-brand-oat/50 aspect-square p-8 flex items-center justify-center">
+                        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=400"
+                            alt="Bolsa de Café Etiopía"
+                            class="w-48 h-48 object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-xl"
+                            onerror="this.src='https://placehold.co/400x400/241F1C/F5EFEB?text=Etiopía+Specialty+Coffee'">
+                        <span
+                            class="absolute top-4 left-4 bg-brand-clay text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Lote
+                            Exclusivo</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs text-brand-clay font-bold tracking-widest uppercase">Etiopía
+                                    Yirgacheffe</span>
+                                <span
+                                    class="bg-brand-sage/20 text-brand-sage text-xs font-semibold px-2 py-0.5 rounded">92.5
+                                    SCA</span>
+                            </div>
+                            <h3 class="font-serif font-bold text-xl text-brand-dark mb-2">Sidamo Orgánico</h3>
+                            <p class="text-xs text-brand-dark/60 mb-4 font-medium flex gap-2">
+                                <span><strong class="text-brand-dark">Notas:</strong> Limón Meyer, Miel,
+                                    Bergamota</span>
+                            </p>
+                            <div class="space-y-2 mb-6">
+                                <div class="flex justify-between text-xs text-brand-dark/70">
+                                    <span>Beneficio:</span>
+                                    <span class="font-medium">Lavado</span>
+                                </div>
+                                <div class="flex justify-between text-xs text-brand-dark/70">
+                                    <span>Altitud:</span>
+                                    <span class="font-medium">1.950 - 2.100 msnm</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <!-- Selección de Molienda -->
+                            <div class="mb-4">
+                                <label class="text-xs font-semibold block mb-1">Molienda:</label>
+                                <select id="molienda-etiopia"
+                                    class="w-full text-xs bg-brand-oat/50 rounded-lg p-2 border-none focus:ring-1 focus:ring-brand-clay">
+                                    <option value="Grano Entero">En Grano Entero</option>
+                                    <option value="Fina (Espresso)">Fina (Espresso)</option>
+                                    <option value="Media (V60 / Filtro)">Media (V60 / Filtro)</option>
+                                    <option value="Gruesa (Prensa Francesa)">Gruesa (Prensa Francesa)</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between items-center pt-4 border-t border-brand-oat">
+                                <span class="font-serif font-bold text-2xl text-brand-dark">$14.500 <span
+                                        class="text-xs font-sans text-brand-dark/50">/ 250g</span></span>
+                                <button onclick="addProductToCart('Etiopía Sidamo', 14500, 'molienda-etiopia')"
+                                    class="bg-brand-dark hover:bg-brand-clay text-white px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider transition-all duration-300 shadow hover:shadow-brand-clay/20 flex items-center gap-2">
+                                    <i class="fa-solid fa-plus"></i> Al Carrito
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Producto 2 -->
+                <div
+                    class="bg-brand-light rounded-3xl overflow-hidden shadow-lg border border-brand-oat flex flex-col justify-between group">
+                    <div
+                        class="relative overflow-hidden bg-brand-oat/50 aspect-square p-8 flex items-center justify-center">
+                        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=400"
+                            alt="Bolsa de Café Colombia"
+                            class="w-48 h-48 object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-xl"
+                            onerror="this.src='https://placehold.co/400x400/241F1C/F5EFEB?text=Colombia+Specialty+Coffee'">
+                        <span
+                            class="absolute top-4 left-4 bg-brand-sage text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Más
+                            Vendido</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs text-brand-clay font-bold tracking-widest uppercase">Colombia
+                                    Geisha</span>
+                                <span
+                                    class="bg-brand-sage/20 text-brand-sage text-xs font-semibold px-2 py-0.5 rounded">91.0
+                                    SCA</span>
+                            </div>
+                            <h3 class="font-serif font-bold text-xl text-brand-dark mb-2">Huila - Finca El Paraíso</h3>
+                            <p class="text-xs text-brand-dark/60 mb-4 font-medium flex gap-2">
+                                <span><strong class="text-brand-dark">Notas:</strong> Cereza, Cacao, Vainilla</span>
+                            </p>
+                            <div class="space-y-2 mb-6">
+                                <div class="flex justify-between text-xs text-brand-dark/70">
+                                    <span>Beneficio:</span>
+                                    <span class="font-medium">Proceso Honey Silvestre</span>
+                                </div>
+                                <div class="flex justify-between text-xs text-brand-dark/70">
+                                    <span>Altitud:</span>
+                                    <span class="font-medium">1.800 msnm</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <!-- Selección de Molienda -->
+                            <div class="mb-4">
+                                <label class="text-xs font-semibold block mb-1">Molienda:</label>
+                                <select id="molienda-colombia"
+                                    class="w-full text-xs bg-brand-oat/50 rounded-lg p-2 border-none focus:ring-1 focus:ring-brand-clay">
+                                    <option value="Grano Entero">En Grano Entero</option>
+                                    <option value="Fina (Espresso)">Fina (Espresso)</option>
+                                    <option value="Media (V60 / Filtro)">Media (V60 / Filtro)</option>
+                                    <option value="Gruesa (Prensa Francesa)">Gruesa (Prensa Francesa)</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between items-center pt-4 border-t border-brand-oat">
+                                <span class="font-serif font-bold text-2xl text-brand-dark">$16.200 <span
+                                        class="text-xs font-sans text-brand-dark/50">/ 250g</span></span>
+                                <button onclick="addProductToCart('Colombia El Paraíso', 16200, 'molienda-colombia')"
+                                    class="bg-brand-dark hover:bg-brand-clay text-white px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider transition-all duration-300 shadow hover:shadow-brand-clay/20 flex items-center gap-2">
+                                    <i class="fa-solid fa-plus"></i> Al Carrito
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Producto 3 -->
+                <div
+                    class="bg-brand-light rounded-3xl overflow-hidden shadow-lg border border-brand-oat flex flex-col justify-between group">
+                    <div
+                        class="relative overflow-hidden bg-brand-oat/50 aspect-square p-8 flex items-center justify-center">
+                        <img src="https://images.unsplash.com/photo-1559056199-641a0ac8b55e?auto=format&fit=crop&q=80&w=400"
+                            alt="Bolsa de Café Costa Rica"
+                            class="w-48 h-48 object-contain transition-transform duration-500 group-hover:scale-110 drop-shadow-xl"
+                            onerror="this.src='https://placehold.co/400x400/241F1C/F5EFEB?text=Costa+Rica+Coffee'">
+                        <span
+                            class="absolute top-4 left-4 bg-yellow-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">Cosecha
+                            Especial</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs text-brand-clay font-bold tracking-widest uppercase">Costa Rica
+                                    Tarrazú</span>
+                                <span
+                                    class="bg-brand-sage/20 text-brand-sage text-xs font-semibold px-2 py-0.5 rounded">89.5
+                                    SCA</span>
+                            </div>
+                            <h3 class="font-serif font-bold text-xl text-brand-dark mb-2">Reserva de la Finca</h3>
+                            <p class="text-xs text-brand-dark/60 mb-4 font-medium flex gap-2">
+                                <span><strong class="text-brand-dark">Notas:</strong> Manzana Verde, Almendras,
+                                    Caramelo</span>
+                            </p>
+                            <div class="space-y-2 mb-6">
+                                <div class="flex justify-between text-xs text-brand-dark/70">
+                                    <span>Beneficio:</span>
+                                    <span class="font-medium">Natural Lento</span>
+                                </div>
+                                <div class="flex justify-between text-xs text-brand-dark/70">
+                                    <span>Altitud:</span>
+                                    <span class="font-medium">1.750 msnm</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <!-- Selección de Molienda -->
+                            <div class="mb-4">
+                                <label class="text-xs font-semibold block mb-1">Molienda:</label>
+                                <select id="molienda-costarica"
+                                    class="w-full text-xs bg-brand-oat/50 rounded-lg p-2 border-none focus:ring-1 focus:ring-brand-clay">
+                                    <option value="Grano Entero">En Grano Entero</option>
+                                    <option value="Fina (Espresso)">Fina (Espresso)</option>
+                                    <option value="Media (V60 / Filtro)">Media (V60 / Filtro)</option>
+                                    <option value="Gruesa (Prensa Francesa)">Gruesa (Prensa Francesa)</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between items-center pt-4 border-t border-brand-oat">
+                                <span class="font-serif font-bold text-2xl text-brand-dark">$15.900 <span
+                                        class="text-xs font-sans text-brand-dark/50">/ 250g</span></span>
+                                <button onclick="addProductToCart('Costa Rica Reserva', 15900, 'molienda-costarica')"
+                                    class="bg-brand-dark hover:bg-brand-clay text-white px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider transition-all duration-300 shadow hover:shadow-brand-clay/20 flex items-center gap-2">
+                                    <i class="fa-solid fa-plus"></i> Al Carrito
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="masterclass" class="py-20 sm:py-32 bg-brand-light relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <!-- Textos e Introducción de la Guía -->
+                <div class="lg:col-span-5 space-y-6">
+                    <span class="text-brand-clay text-sm font-bold tracking-widest uppercase block">Ritual en
+                        Casa</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-brand-dark">Guía de Extracción Interactiva
+                    </h2>
+                    <p class="text-brand-dark/80 font-light leading-relaxed">
+                        Prepara tu café como un barista profesional de <strong>Ookini</strong>. Hemos desarrollado este
+                        asistente digital para guiarte paso a paso con el temporizador perfecto.
+                    </p>
+                    <p class="text-brand-dark/70 font-light text-sm">
+                        Selecciona tu método favorito a la derecha, prepara tus elementos, pon tu balanza en cero y
+                        presiona <strong class="text-brand-clay">"Iniciar Receta"</strong>.
+                    </p>
+                    <div class="p-4 bg-brand-oat/40 rounded-2xl border border-brand-oat space-y-2">
+                        <h4 class="font-bold text-sm"><i class="fa-solid fa-scale-balanced text-brand-clay mr-2"></i>
+                            Proporción Ideal (Ratio)</h4>
+                        <p class="text-xs text-brand-dark/70 leading-relaxed">Recomendamos un ratio de
+                            <strong>1:15</strong> (por ejemplo: 15g de café por cada 225g de agua caliente a 92°C).
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Widget del Temporizador -->
+                <div class="lg:col-span-7">
+                    <div
+                        class="bg-brand-dark text-brand-light rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                        <!-- Detalles de fondo estéticos japoneses -->
+                        <div
+                            class="absolute top-0 right-0 p-8 text-white/5 font-serif text-9xl pointer-events-none select-none">
+                            珈琲</div>
+
+                        <!-- Selector de métodos dentro de la tarjeta -->
+                        <div class="flex gap-2 pb-6 border-b border-brand-light/10 overflow-x-auto scrollbar-none">
+                            <button onclick="selectBrewMethod('v60')" id="brew-v60"
+                                class="brew-tab flex-1 min-w-[100px] text-center py-2 px-3 rounded-xl border border-brand-clay bg-brand-clay text-white transition-all duration-300">
+                                <i class="fa-solid fa-filter block mb-1 text-lg"></i>
+                                <span class="text-xs font-semibold">V60</span>
+                            </button>
+                            <button onclick="selectBrewMethod('french')" id="brew-french"
+                                class="brew-tab flex-1 min-w-[100px] text-center py-2 px-3 rounded-xl border border-brand-light/10 hover:border-brand-clay transition-all duration-300">
+                                <i class="fa-solid fa-mug-hot block mb-1 text-lg"></i>
+                                <span class="text-xs font-semibold">Prensa Francesa</span>
+                            </button>
+                            <button onclick="selectBrewMethod('aeropress')" id="brew-aeropress"
+                                class="brew-tab flex-1 min-w-[100px] text-center py-2 px-3 rounded-xl border border-brand-light/10 hover:border-brand-clay transition-all duration-300">
+                                <i class="fa-solid fa-cubes-stacked block mb-1 text-lg"></i>
+                                <span class="text-xs font-semibold">Aeropress</span>
+                            </button>
+                        </div>
+
+                        <!-- Contenido dinámico del método seleccionado -->
+                        <div class="pt-6 space-y-6">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 id="brew-title" class="font-serif text-2xl font-bold">Hario V60</h3>
+                                    <p id="brew-subtitle" class="text-xs text-brand-light/60">Extracción de perfil
+                                        limpio, acidez brillante y cuerpo sedoso.</p>
+                                </div>
+                                <span id="brew-ratio"
+                                    class="bg-brand-clay/30 border border-brand-clay text-brand-clay text-xs px-3 py-1.5 rounded-full font-bold">Ratio
+                                    1:15</span>
+                            </div>
+
+                            <!-- Barra de progreso e indicador de pasos -->
+                            <div class="bg-brand-light/10 p-4 sm:p-6 rounded-2xl relative">
+                                <div class="flex justify-between items-center text-xs mb-2">
+                                    <span class="text-brand-clay uppercase tracking-widest font-bold">Instrucciones
+                                        Activas</span>
+                                    <span id="step-number" class="font-semibold text-brand-light/80">Paso 1 de 3</span>
+                                </div>
+                                <p id="step-desc" class="text-sm font-light min-h-[48px] leading-relaxed">
+                                    Moja el filtro de papel con agua caliente para eliminar residuos, luego agrega 15g
+                                    de café molido medio y pon la balanza en cero.
+                                </p>
+
+                                <!-- Visualización del cronómetro -->
+                                <div class="flex justify-center items-center py-6 gap-6">
+                                    <div class="text-center">
+                                        <span id="timer-display"
+                                            class="font-serif text-5xl sm:text-6xl font-bold tracking-tight block text-white tabular-nums">00:30</span>
+                                        <span
+                                            class="text-[10px] uppercase tracking-wider text-brand-light/50 font-bold">Tiempo
+                                            del paso</span>
+                                    </div>
+                                    <div class="h-10 w-px bg-brand-light/20"></div>
+                                    <div class="text-center">
+                                        <span id="water-display"
+                                            class="font-serif text-5xl sm:text-6xl font-bold tracking-tight block text-brand-clay tabular-nums">50g</span>
+                                        <span
+                                            class="text-[10px] uppercase tracking-wider text-brand-light/50 font-bold">Agua
+                                            acumulada</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Botones de Acción del Temporizador -->
+                            <div class="flex gap-4">
+                                <button id="timer-primary-btn" onclick="startTimer()"
+                                    class="flex-1 bg-brand-clay hover:bg-brand-clay/90 text-white font-semibold py-3.5 px-6 rounded-xl transition-colors duration-300 flex items-center justify-center gap-2">
+                                    <i id="btn-icon" class="fa-solid fa-play"></i> <span id="btn-text">Iniciar
+                                        Receta</span>
+                                </button>
+                                <button id="timer-reset-btn" onclick="resetBrewTimer()"
+                                    class="bg-brand-light/10 hover:bg-brand-light/20 text-white font-semibold py-3.5 px-6 rounded-xl transition-colors duration-300 flex items-center justify-center">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 sm:py-32 bg-brand-oat/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto space-y-4 mb-16">
+                <span class="text-brand-clay text-sm font-bold tracking-widest uppercase block">La Experiencia</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-brand-dark">La Comunidad Opina</h2>
+                <p class="text-brand-dark/70 font-light">Clientes habituales y amantes de la tercera ola que han
+                    encontrado su refugio diario en Ookini.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Reseña 1 -->
+                <div
+                    class="bg-brand-light p-8 rounded-3xl border border-brand-oat shadow-sm flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex text-brand-clay gap-1">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm font-light leading-relaxed italic text-brand-dark/90">
+                            "El nivel de atención y conocimiento de los baristas es de otro mundo. Su espresso simple
+                            tiene una claridad de sabor asombrosa. Ookini es un templo de paz."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 mt-6 pt-6 border-t border-brand-oat">
+                        <div
+                            class="w-10 h-10 rounded-full bg-brand-oat font-bold flex items-center justify-center text-sm text-brand-clay">
+                            AM</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Alejandro Muñoz</h4>
+                            <p class="text-xs text-brand-dark/50">Apasionado del café de filtro</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reseña 2 -->
+                <div
+                    class="bg-brand-light p-8 rounded-3xl border border-brand-oat shadow-sm flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex text-brand-clay gap-1">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm font-light leading-relaxed italic text-brand-dark/90">
+                            "Compro los granos para casa y uso el temporizador interactivo de su web. ¡Es increíble cómo
+                            cambia el sabor con los pasos correctos! Un antes y un después."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 mt-6 pt-6 border-t border-brand-oat">
+                        <div
+                            class="w-10 h-10 rounded-full bg-brand-oat font-bold flex items-center justify-center text-sm text-brand-clay">
+                            SK</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Sayaka Kurata</h4>
+                            <p class="text-xs text-brand-dark/50">Clienta habitual</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reseña 3 -->
+                <div
+                    class="bg-brand-light p-8 rounded-3xl border border-brand-oat shadow-sm flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex text-brand-clay gap-1">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <p class="text-sm font-light leading-relaxed italic text-brand-dark/90">
+                            "Excelente ambiente Japandi. He participado de sus catas sensoriales de los sábados y salí
+                            asombrada de toda la ciencia del café. Totalmente recomendado."
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3 mt-6 pt-6 border-t border-brand-oat">
+                        <div
+                            class="w-10 h-10 rounded-full bg-brand-oat font-bold flex items-center justify-center text-sm text-brand-clay">
+                            VP</div>
+                        <div>
+                            <h4 class="font-bold text-sm">Valentina Pérez</h4>
+                            <p class="text-xs text-brand-dark/50">Diseñadora de Interiores</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reservas" class="py-20 sm:py-32 bg-brand-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div
+                class="grid grid-cols-1 lg:grid-cols-12 gap-12 bg-brand-oat/35 rounded-[3rem] p-6 sm:p-12 lg:p-16 border border-brand-oat">
+
+                <!-- Info de contacto y Ubicación -->
+                <div class="lg:col-span-5 space-y-8">
+                    <div>
+                        <span
+                            class="text-brand-clay text-sm font-bold tracking-widest uppercase block mb-2">Visítanos</span>
+                        <h2 class="font-serif text-3xl font-bold text-brand-dark">¿Hablamos con un café de por medio?
+                        </h2>
+                        <p class="text-brand-dark/70 font-light mt-4">Un oasis de madera natural, aromas florales y
+                            música de jazz suave te espera.</p>
+                    </div>
+
+                    <div class="space-y-4 text-sm">
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-brand-clay/10 text-brand-clay flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Nuestra Casa</h4>
+                                <p class="text-brand-dark/70">Calle Ochre 108, Barrio El Poblado, Medellín</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-brand-clay/10 text-brand-clay flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-clock"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Horario de Hospitalidad</h4>
+                                <p class="text-brand-dark/70">Lunes a Sábado: 08:00 AM – 08:00 PM</p>
+                                <p class="text-brand-dark/70">Domingos y Festivos: 09:00 AM – 06:00 PM</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-brand-clay/10 text-brand-clay flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold">Canales Directos</h4>
+                                <p class="text-brand-dark/70">+57 300 123 4567</p>
+                                <p class="text-brand-dark/70">hola@ookinicafe.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulario de Reserva/Taller -->
+                <div class="lg:col-span-7 bg-brand-light p-6 sm:p-10 rounded-3xl border border-brand-oat shadow-lg">
+                    <h3 class="font-serif text-2xl font-bold mb-2">Reserva una Mesa o Cata Sensorial</h3>
+                    <p class="text-xs text-brand-dark/60 mb-6">Dado el aforo minimalista e íntimo, te sugerimos reservar
+                        con antelación para asegurar tu rincón de tranquilidad.</p>
+
+                    <form id="reservation-form" onsubmit="handleReservationSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold mb-1">Nombre Completo</label>
+                                <input type="text" required
+                                    class="w-full bg-brand-oat/50 rounded-xl p-3 border-none focus:ring-1 focus:ring-brand-clay text-sm"
+                                    placeholder="Ej. Camila Restrepo">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold mb-1">Correo Electrónico</label>
+                                <input type="email" required
+                                    class="w-full bg-brand-oat/50 rounded-xl p-3 border-none focus:ring-1 focus:ring-brand-clay text-sm"
+                                    placeholder="ejemplo@correo.com">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold mb-1">Fecha</label>
+                                <input type="date" required
+                                    class="w-full bg-brand-oat/50 rounded-xl p-3 border-none focus:ring-1 focus:ring-brand-clay text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold mb-1">Hora</label>
+                                <select required
+                                    class="w-full bg-brand-oat/50 rounded-xl p-3 border-none focus:ring-1 focus:ring-brand-clay text-sm">
+                                    <option>09:00 AM</option>
+                                    <option>11:30 AM</option>
+                                    <option>03:00 PM (Taller Cata)</option>
+                                    <option>04:30 PM</option>
+                                    <option>06:00 PM</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold mb-1">Personas / Tipo</label>
+                                <select required
+                                    class="w-full bg-brand-oat/50 rounded-xl p-3 border-none focus:ring-1 focus:ring-brand-clay text-sm">
+                                    <option>Mesa Simple (1-2 pers)</option>
+                                    <option>Mesa Familiar (3-5 pers)</option>
+                                    <option>Taller Cata de Café (Individual)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold mb-1">Notas Especiales o Preferencia de
+                                Molienda/Alergias</label>
+                            <textarea rows="3"
+                                class="w-full bg-brand-oat/50 rounded-xl p-3 border-none focus:ring-1 focus:ring-brand-clay text-sm"
+                                placeholder="Cuéntanos si tienes alguna preferencia especial o si vienes a teletrabajar en paz..."></textarea>
+                        </div>
+
+                        <button type="submit"
+                            class="w-full bg-brand-dark hover:bg-brand-clay text-white font-semibold py-4 px-6 rounded-xl transition-colors duration-300 shadow hover:shadow-brand-clay/20 tracking-wider">
+                            Confirmar Reserva de Espacio
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-brand-dark text-brand-light/90 pt-16 pb-12 border-t border-brand-light/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <!-- Marca -->
+                <div class="space-y-4">
+                    <span class="font-serif text-2xl font-bold tracking-wider text-white">
+                        OOKINI<span
+                            class="text-brand-clay font-sans text-xs block tracking-widest mt-[-2px]">おおきに</span>
+                    </span>
+                    <p class="text-xs text-brand-light/60 font-light leading-relaxed">
+                        Artesanos del café de especialidad y anfitriones de la quietud. Buscamos brindar momentos
+                        perfectos de disfrute diario.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#"
+                            class="p-2 rounded-full bg-brand-light/5 hover:bg-brand-clay text-brand-light transition-colors"><i
+                                class="fa-brands fa-instagram text-lg"></i></a>
+                        <a href="#"
+                            class="p-2 rounded-full bg-brand-light/5 hover:bg-brand-clay text-brand-light transition-colors"><i
+                                class="fa-brands fa-facebook text-lg"></i></a>
+                        <a href="#"
+                            class="p-2 rounded-full bg-brand-light/5 hover:bg-brand-clay text-brand-light transition-colors"><i
+                                class="fa-brands fa-tiktok text-lg"></i></a>
+                    </div>
+                </div>
+
+                <!-- Enlaces Rápidos -->
+                <div>
+                    <h4 class="font-serif text-lg font-bold text-white mb-4">Explorar</h4>
+                    <ul class="space-y-2 text-xs text-brand-light/70 font-light">
+                        <li><a href="#historia" class="hover:text-brand-clay">Nuestra Filosofía Japandi</a></li>
+                        <li><a href="#menu" class="hover:text-brand-clay">Menú de la Barra</a></li>
+                        <li><a href="#tienda" class="hover:text-brand-clay">Tienda de Café de Origen</a></li>
+                        <li><a href="#masterclass" class="hover:text-brand-clay">Asistente de Extracción</a></li>
+                    </ul>
+                </div>
+
+                <!-- Trazabilidad del mes -->
+                <div>
+                    <h4 class="font-serif text-lg font-bold text-white mb-4">Trazabilidad Activa</h4>
+                    <ul class="space-y-2 text-xs text-brand-light/70 font-light">
+                        <li>Lote: <strong class="text-brand-clay">Etiopía Sidamo Orgánico</strong></li>
+                        <li>Altitud: 2,050 metros</li>
+                        <li>Humedad del Grano: 10.2%</li>
+                        <li>Perfil: Melocotón, té negro refinado</li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="space-y-4">
+                    <h4 class="font-serif text-lg font-bold text-white mb-4">El Diario de Ookini</h4>
+                    <p class="text-xs text-brand-light/60 leading-relaxed font-light">Únete a nuestro club de correo. Te
+                        compartimos ofertas de lotes exclusivos, invitaciones a talleres privados de barismo y un 10% de
+                        descuento de bienvenida en granos.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Tu correo electrónico"
+                            class="w-full bg-brand-light/10 text-white rounded-l-xl p-3 border-none focus:ring-1 focus:ring-brand-clay text-xs">
+                        <button onclick="handleSubscribe()"
+                            class="bg-brand-clay hover:bg-brand-clay/90 text-white font-bold px-4 rounded-r-xl text-xs"><i
+                                class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="border-t border-brand-light/10 pt-8 text-center text-[11px] text-brand-light/40 font-light space-y-2">
+                <p>&copy; 2026 Ookini Café de Especialidad. Todos los derechos reservados. Diseñado bajo el principio de
+                    simplicidad.</p>
+                <p>Abrazando el <strong class="font-medium text-brand-light/60">Wabi-Sabi</strong>: la belleza en la
+                    imperfección transitoria de cada taza de café fresca.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="cart-drawer"
+        class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-brand-light shadow-2xl border-l border-brand-oat transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col justify-between">
+        <!-- Cabecera del Carrito -->
+        <div class="p-6 border-b border-brand-oat flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-bag-shopping text-brand-clay text-xl"></i>
+                <h3 class="font-serif text-xl font-bold">Bolsa de Pedido</h3>
+            </div>
+            <button onclick="toggleCart()"
+                class="p-2 rounded-full hover:bg-brand-oat text-brand-dark/70 transition-colors"
+                aria-label="Cerrar Carrito">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Lista de Items en el Carrito (Dinámica) -->
+        <div id="cart-items" class="p-6 flex-1 overflow-y-auto space-y-4">
+            <!-- Caso de Carrito Vacío -->
+            <div id="empty-cart-view" class="flex flex-col items-center justify-center h-full text-center space-y-4">
+                <div
+                    class="w-16 h-16 rounded-full bg-brand-oat flex items-center justify-center text-brand-clay text-2xl">
+                    <i class="fa-solid fa-mug-hot"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-base">¿Aún sin café en tu bolsa?</h4>
+                    <p class="text-xs text-brand-dark/60 mt-1">Explora nuestros cafés de especialidad o las deliciosas
+                        opciones de nuestra carta.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen y Checkout -->
+        <div id="cart-footer" class="p-6 border-t border-brand-oat bg-brand-oat/20 space-y-4 hidden">
+            <div class="space-y-2">
+                <div class="flex justify-between text-xs text-brand-dark/70">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal" class="font-semibold">$0</span>
+                </div>
+                <div class="flex justify-between text-xs text-brand-dark/70">
+                    <span>Envío</span>
+                    <span id="cart-shipping" class="font-semibold text-brand-sage">¡Gratis!</span>
+                </div>
+                <div class="flex justify-between items-end pt-2 border-t border-brand-oat">
+                    <span class="font-serif text-lg font-bold">Total Estimado</span>
+                    <span id="cart-total" class="font-serif text-2xl font-bold text-brand-clay">$0</span>
+                </div>
+            </div>
+
+            <button onclick="triggerCheckout()"
+                class="w-full bg-brand-dark hover:bg-brand-clay text-white font-semibold py-4 px-6 rounded-xl transition-colors duration-300 shadow hover:shadow-brand-clay/20 tracking-wider flex items-center justify-center gap-2">
+                <i class="fa-solid fa-credit-card"></i> Proceder al Pago Seguro
+            </button>
+            <p class="text-[10px] text-brand-dark/50 text-center"><i class="fa-solid fa-lock text-brand-clay mr-1"></i>
+                Tu transacción de prueba está encriptada mediante protocolo seguro.</p>
+        </div>
+    </div>
+    <!-- Capa gris de fondo del Carrito -->
+    <div id="cart-overlay" onclick="toggleCart()"
+        class="fixed inset-0 bg-brand-dark/30 z-40 hidden transition-opacity duration-300 opacity-0"></div>
+
+    <!-- Modal de Reserva Exitosa -->
+    <div id="reservation-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
+        <div class="fixed inset-0 bg-brand-dark/50 backdrop-blur-sm" onclick="closeModal('reservation-modal')"></div>
+        <div
+            class="bg-brand-light rounded-3xl p-6 sm:p-10 max-w-md w-full relative z-10 border border-brand-oat shadow-2xl text-center space-y-6">
+            <div
+                class="w-16 h-16 rounded-full bg-brand-sage/20 text-brand-sage flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <h3 class="font-serif text-2xl font-bold text-brand-dark">¡Mesa Asegurada!</h3>
+                <p id="reservation-summary" class="text-sm text-brand-dark/70 mt-2 font-light">
+                    Hemos agendado tu espacio con éxito. Te esperamos para entregarte la mejor experiencia de
+                    hospitalidad.
+                </p>
+            </div>
+            <div class="p-4 bg-brand-oat rounded-2xl text-left space-y-2 text-xs">
+                <p><strong>Ubicación:</strong> Calle Ochre 108, El Poblado, Medellín</p>
+                <p class="text-brand-clay">Te hemos enviado un correo de confirmación de cortesía.</p>
+            </div>
+            <button onclick="closeModal('reservation-modal')"
+                class="w-full bg-brand-dark hover:bg-brand-clay text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300">
+                ¡Muchas Gracias! (おおきに)
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Checkout Exitoso -->
+    <div id="checkout-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4">
+        <div class="fixed inset-0 bg-brand-dark/50 backdrop-blur-sm" onclick="closeModal('checkout-modal')"></div>
+        <div
+            class="bg-brand-light rounded-3xl p-6 sm:p-10 max-w-md w-full relative z-10 border border-brand-oat shadow-2xl text-center space-y-6">
+            <div
+                class="w-16 h-16 rounded-full bg-brand-clay/20 text-brand-clay flex items-center justify-center mx-auto text-3xl">
+                <i class="fa-solid fa-mug-hot"></i>
+            </div>
+            <div>
+                <h3 class="font-serif text-2xl font-bold text-brand-dark">¡Pedido Procesado!</h3>
+                <p class="text-sm text-brand-dark/70 mt-2 font-light">
+                    Tu lote exclusivo de granos de especialidad ya está en proceso de pesaje y empaquetado
+                    personalizado.
+                </p>
+            </div>
+            <div class="p-4 bg-brand-oat rounded-2xl text-left space-y-2 text-xs">
+                <p><strong>Destino:</strong> Dirección ingresada en pasarela de pago</p>
+                <p><strong>Envío:</strong> Despacho prioritario de granos frescos</p>
+            </div>
+            <button onclick="closeModal('checkout-modal')"
+                class="w-full bg-brand-clay hover:bg-brand-dark text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300">
+                Excelente
+            </button>
+        </div>
+    </div>
+
+    <!-- Notificación emergente rápida (Toast) -->
+    <div id="toast"
+        class="fixed bottom-6 left-6 z-50 bg-brand-dark text-white px-5 py-3 rounded-2xl shadow-lg flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none text-sm font-medium">
+        <i class="fa-solid fa-circle-check text-brand-clay"></i>
+        <span id="toast-message">Item añadido con éxito</span>
+    </div>
+
+    <script>
+        // --- 1. DATOS DEL MENÚ DE LA BARRA (ESPRESSO, FILTRADOS, ESPECIALES, REPOSTERÍA) ---
+        const menuData = [
+            { id: 'm1', name: 'Espresso Macchiato', category: 'espresso', price: 6200, desc: 'Espresso doble cortado con microespuma de leche sedosa.', sca: '88 pts' },
+            { id: 'm2', name: 'Flat White Japonés', category: 'espresso', price: 8500, desc: 'Espresso doble con una fina capa de leche cremada a temperatura exacta.', sca: '90 pts', popular: true },
+            { id: 'm3', name: 'Latte de Lavanda & Miel', category: 'especiales', price: 9800, desc: 'Inyección de jarabe artesanal de flor de lavanda y miel orgánica de abejas locales.', sca: 'Fórmula de Autor' },
+            { id: 'm4', name: 'Filtrado Hario V60', category: 'filtrados', price: 11000, desc: 'Elegido por su perfil ultra-limpio. Pregunta por los granos disponibles de la semana.', sca: '91-94 pts', popular: true },
+            { id: 'm5', name: 'Chemex Artesanal', category: 'filtrados', price: 12500, desc: 'Para compartir. Destaca el dulzor y balance del café con notas frutales.', sca: '92 pts' },
+            { id: 'm6', name: 'Kyoto-Style Cold Brew', category: 'especiales', price: 10500, desc: 'Goteo lento en frío de 12 horas. Suave, sutilmente dulce y con cuerpo ligero.', sca: 'Lote limitado' },
+            { id: 'm7', name: 'Mochi de Té Matcha & Frambuesa', category: 'reposteria', price: 7500, desc: 'Textura elástica tradicional japonesa, rellena con crema de matcha y compota de frambuesas silvestres.', sca: 'Importado' },
+            { id: 'm8', name: 'Roll de Cardamomo y Azahar', category: 'reposteria', price: 8200, desc: 'Masa de hojaldre horneada a diario con mantequilla, cardamomo fresco y agua de azahar.', sca: 'Horneado Diario' }
+        ];
+
+        // --- 2. LOGICA DEL MENÚ INTERACTIVO ---
+        function filterMenu(category) {
+            // Actualizar pestañas activas
+            document.querySelectorAll('.menu-tab').forEach(btn => {
+                btn.classList.remove('bg-brand-dark', 'text-white');
+                btn.classList.add('bg-white', 'text-brand-dark');
+            });
+            const activeBtn = document.getElementById(`btn-${category}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('bg-white', 'text-brand-dark');
+                activeBtn.classList.add('bg-brand-dark', 'text-white');
+            }
+
+            // Filtrar e inyectar items
+            const container = document.getElementById('menu-items-container');
+            container.style.opacity = '0';
+
+            setTimeout(() => {
+                const filtered = menuData.filter(item => item.category === category);
+                container.innerHTML = filtered.map(item => `
+                    <div class="bg-brand-oat/25 hover:bg-brand-oat/55 p-6 rounded-3xl border border-brand-oat/60 flex flex-col justify-between transition-all duration-300 group">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-start gap-4">
+                                <h3 class="font-serif font-bold text-lg text-brand-dark group-hover:text-brand-clay transition-colors">${item.name}</h3>
+                                <span class="text-brand-clay font-bold font-serif text-lg shrink-0">$${item.price.toLocaleString()}</span>
+                            </div>
+                            <p class="text-xs text-brand-dark/70 font-light leading-relaxed">${item.desc}</p>
+                        </div>
+                        <div class="flex justify-between items-center mt-6 pt-4 border-t border-brand-oat/30">
+                            <span class="text-[10px] uppercase font-bold tracking-widest text-brand-sage">${item.sca}</span>
+                            <button onclick="addMenuItemToCart('${item.name}', ${item.price})" class="text-xs font-semibold text-brand-clay hover:text-brand-dark flex items-center gap-1.5 transition-colors">
+                                <i class="fa-solid fa-circle-plus"></i> Añadir al pedido digital
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+                container.style.opacity = '1';
+            }, 150);
+        }
+
+        // --- 3. ESTADO DEL CARRITO DE COMPRAS ---
+        let cart = [];
+
+        function updateCartUI() {
+            const countEl = document.getElementById('cart-count');
+            const itemsContainer = document.getElementById('cart-items');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+            const footerEl = document.getElementById('cart-footer');
+            const emptyView = document.getElementById('empty-cart-view');
+
+            // Actualizar conteo de burbuja
+            const totalQuantity = cart.reduce((acc, item) => acc + item.qty, 0);
+            countEl.textContent = totalQuantity;
+
+            if (cart.length === 0) {
+                emptyView.style.display = 'flex';
+                footerEl.style.display = 'none';
+                itemsContainer.innerHTML = '';
+                return;
+            }
+
+            emptyView.style.display = 'none';
+            footerEl.style.display = 'block';
+
+            // Inyectar items con animaciones de cambio de cantidad
+            itemsContainer.innerHTML = cart.map((item, index) => `
+                <div class="flex items-center gap-4 bg-brand-oat/40 p-4 rounded-2xl border border-brand-oat/60 justify-between">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-serif font-bold text-sm text-brand-dark truncate">${item.name}</h4>
+                        <p class="text-[11px] text-brand-clay font-medium">${item.detail || 'Para servir o consumo inmediato'}</p>
+                        <span class="text-xs text-brand-dark/60 block mt-1">$${(item.price * item.qty).toLocaleString()}</span>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="adjustQty(${index}, -1)" class="w-7 h-7 bg-brand-light hover:bg-brand-clay hover:text-white rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+                        <span class="text-sm font-semibold w-6 text-center">${item.qty}</span>
+                        <button onclick="adjustQty(${index}, 1)" class="w-7 h-7 bg-brand-light hover:bg-brand-clay hover:text-white rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Calcular subtotales
+            const subtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+            subtotalEl.textContent = `$${subtotal.toLocaleString()}`;
+            totalEl.textContent = `$${subtotal.toLocaleString()}`;
+        }
+
+        function addProductToCart(pName, pPrice, selectId) {
+            const selectEl = document.getElementById(selectId);
+            const detail = selectEl ? selectEl.value : null;
+
+            // Verificar si el producto ya existe en el carro
+            const existingIndex = cart.findIndex(item => item.name === pName && item.detail === detail);
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += 1;
+            } else {
+                cart.push({ name: pName, price: pPrice, qty: 1, detail: detail });
+            }
+
+            updateCartUI();
+            showToast(`¡Añadido: ${pName} (${detail || 'Estándar'})!`);
+        }
+
+        function addMenuItemToCart(name, price) {
+            const existingIndex = cart.findIndex(item => item.name === name && !item.detail);
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += 1;
+            } else {
+                cart.push({ name: name, price: price, qty: 1, detail: "" });
+            }
+            updateCartUI();
+            showToast(`¡Añadido: ${name} al pedido!`);
+        }
+
+        function adjustQty(index, amount) {
+            cart[index].qty += amount;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
+        }
+
+        // --- 4. LOGICA DEL CARRO LATERAL (DRAWER) ---
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            const overlay = document.getElementById('cart-overlay');
+
+            if (drawer.classList.contains('translate-x-full')) {
+                drawer.classList.remove('translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.add('opacity-100'), 10);
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.remove('opacity-100');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+        }
+
+        // --- 5. LOGICA DEL MENÚ MÓVIL ---
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('menu-icon');
+
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.className = "fa-solid fa-xmark text-lg";
+            } else {
+                menu.classList.add('hidden');
+                icon.className = "fa-solid fa-bars text-lg";
+            }
+        }
+
+        // --- 6. LOGICA DEL TEMPORIZADOR INTERACTIVO ---
+        const brewMethods = {
+            v60: {
+                title: "Hario V60",
+                subtitle: "Extracción de perfil limpio, acidez brillante y cuerpo sedoso.",
+                ratio: "Ratio 1:15",
+                steps: [
+                    { time: 30, water: 50, desc: "Paso 1/3 (Pre-infusión): Vierte 50g de agua a 92°C en espiral para mojar todo el café molido. Deja florecer para liberar CO2 de los granos frescos." },
+                    { time: 60, water: 150, desc: "Paso 2/3 (Primera Extracción): Vierte de forma constante y en círculos medianos hasta alcanzar 150g totales. Mantén el vertido en el centro." },
+                    { time: 60, water: 225, desc: "Paso 3/3 (Extracción Final): Realiza el último vertido suave y pausado hasta llegar a 225g totales de agua. Deja escurrir por completo." }
+                ]
+            },
+            french: {
+                title: "Prensa Francesa",
+                subtitle: "Perfil de gran cuerpo, aceites naturales intactos y textura densa.",
+                ratio: "Ratio 1:15",
+                steps: [
+                    { time: 45, water: 100, desc: "Paso 1/3 (Infusión Inicial): Añade 15g de molienda gruesa. Vierte 100g de agua asegurando humedecer toda la superficie uniformemente." },
+                    { time: 120, water: 225, desc: "Paso 2/3 (Infusión Total): Añade el agua restante hasta 225g totales. Coloca la tapa (sin presionar el émbolo) y espera a que repose la infusión." },
+                    { time: 15, water: 225, desc: "Paso 3/3 (Filtrado): Presiona el émbolo lentamente con peso constante. Sirve inmediatamente para que no sobre-extraiga." }
+                ]
+            },
+            aeropress: {
+                title: "Aeropress",
+                subtitle: "Uso de presión manual para resaltar dulzor y baja acidez.",
+                ratio: "Ratio 1:14",
+                steps: [
+                    { time: 30, water: 60, desc: "Paso 1/3 (Remojo): Coloca 16g de café molido fino-medio. Vierte 60g de agua, remueve suavemente con la espátula durante 10 segundos." },
+                    { time: 60, water: 224, desc: "Paso 2/3 (Infusión): Llena hasta alcanzar los 224g de agua caliente. Coloca el émbolo en la parte superior para crear un sello de vacío." },
+                    { time: 30, water: 224, desc: "Paso 3/3 (Presión): Presiona el émbolo con firmeza y control uniforme hacia abajo. Detén el prensado cuando escuches un siseo de aire." }
+                ]
+            }
+        };
+
+        let currentBrewMethod = "v60";
+        let currentStepIndex = 0;
+        let timerInterval = null;
+        let remainingSeconds = 30;
+        let accumulatedWater = 50;
+
+        function selectBrewMethod(methodKey) {
+            // Resetear temporizador previo si está corriendo
+            resetBrewTimer();
+
+            currentBrewMethod = methodKey;
+
+            // Actualizar interfaz del selector
+            document.querySelectorAll('.brew-tab').forEach(btn => {
+                btn.classList.remove('bg-brand-clay', 'text-white', 'border-brand-clay');
+                btn.classList.add('border-brand-light/10');
+            });
+            const activeTab = document.getElementById(`brew-${methodKey}`);
+            if (activeTab) {
+                activeTab.classList.remove('border-brand-light/10');
+                activeTab.classList.add('bg-brand-clay', 'text-white', 'border-brand-clay');
+            }
+
+            // Actualizar Textos
+            const data = brewMethods[methodKey];
+            document.getElementById('brew-title').textContent = data.title;
+            document.getElementById('brew-subtitle').textContent = data.subtitle;
+            document.getElementById('brew-ratio').textContent = data.ratio;
+
+            // Cargar datos del primer paso de manera estática
+            currentStepIndex = 0;
+            const firstStep = data.steps[0];
+            remainingSeconds = firstStep.time;
+            accumulatedWater = firstStep.water;
+
+            updateBrewTimerUI(firstStep);
+        }
+
+        function updateBrewTimerUI(step) {
+            document.getElementById('step-number').textContent = `Paso ${currentStepIndex + 1} de ${brewMethods[currentBrewMethod].steps.length}`;
+            document.getElementById('step-desc').textContent = step.desc;
+            document.getElementById('water-display').textContent = `${accumulatedWater}g`;
+
+            // Formatear tiempo
+            const mins = Math.floor(remainingSeconds / 60);
+            const secs = remainingSeconds % 60;
+            document.getElementById('timer-display').textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            const btnText = document.getElementById('btn-text');
+            const btnIcon = document.getElementById('btn-icon');
+
+            if (timerInterval) {
+                // Pausar
+                clearInterval(timerInterval);
+                timerInterval = null;
+                btnText.textContent = "Continuar";
+                btnIcon.className = "fa-solid fa-play";
+            } else {
+                // Iniciar
+                btnText.textContent = "Pausar";
+                btnIcon.className = "fa-solid fa-pause";
+
+                timerInterval = setInterval(() => {
+                    remainingSeconds--;
+                    if (remainingSeconds < 0) {
+                        // Siguiente paso
+                        currentStepIndex++;
+                        const steps = brewMethods[currentBrewMethod].steps;
+
+                        if (currentStepIndex < steps.length) {
+                            const nextStep = steps[currentStepIndex];
+                            remainingSeconds = nextStep.time;
+                            accumulatedWater = nextStep.water;
+                            updateBrewTimerUI(nextStep);
+                            showToast(`¡Iniciando Paso ${currentStepIndex + 1}!`);
+                        } else {
+                            // Extracción Finalizada con éxito
+                            clearInterval(timerInterval);
+                            timerInterval = null;
+                            btnText.textContent = "¡Completado!";
+                            btnIcon.className = "fa-solid fa-circle-check";
+                            document.getElementById('timer-display').textContent = "00:00";
+                            showToast("¡Café listo! Disfruta tu taza.");
+                        }
+                    } else {
+                        // Seguir descontando
+                        const steps = brewMethods[currentBrewMethod].steps;
+                        updateBrewTimerUI(steps[currentStepIndex]);
+                    }
+                }, 1000);
+            }
+        }
+
+        function resetBrewTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            const btnText = document.getElementById('btn-text');
+            const btnIcon = document.getElementById('btn-icon');
+            btnText.textContent = "Iniciar Receta";
+            btnIcon.className = "fa-solid fa-play";
+
+            currentStepIndex = 0;
+            const steps = brewMethods[currentBrewMethod].steps;
+            remainingSeconds = steps[0].time;
+            accumulatedWater = steps[0].water;
+            updateBrewTimerUI(steps[0]);
+        }
+
+        // --- 7. MODALES, RESERVAS Y ACCIONES ---
+        function showModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        function handleReservationSubmit(event) {
+            event.preventDefault();
+            // Recoger datos simulados
+            const form = event.target;
+            const inputs = form.querySelectorAll('input, select');
+            const summary = document.getElementById('reservation-summary');
+
+            summary.textContent = `Hemos asignado tu espacio reservado para la fecha seleccionada. Recibirás tu confirmación directamente en tu bandeja de entrada. ¡Nos vemos pronto en la barra!`;
+
+            form.reset();
+            showModal('reservation-modal');
+        }
+
+        function triggerCheckout() {
+            // Simular checkout
+            cart = [];
+            updateCartUI();
+            toggleCart();
+            showModal('checkout-modal');
+        }
+
+        function handleSubscribe() {
+            showToast("¡Te has suscrito con un 10% de descuento!");
+        }
+
+        // Sistema de notificaciones rápidas (Toast)
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.textContent = msg;
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // --- 8. EJECUCIONES AL CARGAR ---
+        window.onload = function () {
+            // Inicializar menú en espresso
+            filterMenu('espresso');
+            // Inicializar guía en V60
+            selectBrewMethod('v60');
+        }
+    </script>
+</body>
+
+</html>

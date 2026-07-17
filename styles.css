@@ -1,0 +1,42 @@
+body {
+    background-color: #F2F0EA;
+    font-family: Georgia, serif;
+    color: #1A1A1A;
+}
+
+h1 {
+    color: #5B9B8E;
+    font-size: 2.5rem;
+}
+
+header {
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #1A1A1A;
+}
+
+nav a {
+    color: #5B9B8E;
+}
+
+main {
+    padding: 3rem 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h3 {
+    font-size: 1.1rem;
+}
+
+.metodos {
+    font-size: 1.1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+    color: #5B9B8E
+}
+
+.precio {
+    font-weight: bold;
+    color: #5B9B8E
+}
